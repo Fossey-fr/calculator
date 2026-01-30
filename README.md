@@ -9,3 +9,6 @@ You can learn about the assignment [here](https://www.theodinproject.com/lessons
 - Backspace button
 - Keyboard support
 - Find [El Dorado](https://en.wikipedia.org/wiki/El_Dorado)
+
+### Known bugs
+- Pressing any operator after triggering easter egg prints 'NaN' to display
