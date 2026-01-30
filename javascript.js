@@ -23,7 +23,7 @@ btns.forEach((button) => {
 
 function evaluateInput(input) {
     // if AC pressed or OperationCompleted true: clear all variables, wipe display, and exit function (if AC)
-    if (input == "ac" || operationCompleted == true) {
+    if (input == "ac" || (operationCompleted == true && isNumber(input))) {
         resetValues();
         if (input == "ac") return;
     };
