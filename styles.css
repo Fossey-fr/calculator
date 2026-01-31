@@ -13,13 +13,16 @@
     background-color: midnightblue;
 }
 
-.row {
+.row,
+.double {
     display: flex;
     flex: 1 1 0;
     gap: 2px;
 }
 
-.row > div {
+.row > .btn,
+.displayRow > div,
+.double > .btn {
     display: flex;
     flex: 1 1 0;
     border: 1px solid black;
@@ -27,7 +30,19 @@
     font-size: 300%;
 }
 
-span { 
+.displayRow > div {
+    border: 3px solid black;
+}
+
+.double {
+    display: flex;
+    flex-direction: column;
+    font-size: 50%;
+    border: 1px solid black;
+}
+
+span,
+i { 
     margin: auto;
 }
 
@@ -41,3 +56,4 @@ span {
     padding: 5px;
     font-size: 120%;
 }
+
