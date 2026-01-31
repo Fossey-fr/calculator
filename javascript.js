@@ -27,7 +27,7 @@ function getResultOf(input) {
     }
 
     if (input == "equals") {
-        if (hasValue(operandB.value)) {
+        if (isPopulated(operandB.value)) {
             display.textContent = result;
             setTileColors();
             operationCompleted = true;
@@ -48,13 +48,13 @@ function getResultOf(input) {
     }
 
     if (isOperator(input)) {
-        if (hasValue(operandB.value)) {
+        if (isPopulated(operandB.value)) {
             resetValues();
             display.textContent = result;
             operandA.value = result;
             operator = input;
         }
-        else if (hasValue(operandA.value)) {
+        else if (isPopulated(operandA.value)) {
                 operator = input;
                 setTileColors(input);
         }
@@ -66,7 +66,7 @@ function getResultOf(input) {
             display.textContent = operandA.value;
             operandA.isInteger = false;
         }
-        else if (hasValue(operator) && operandB.isInteger) {
+        else if (isPopulated(operator) && operandB.isInteger) {
             append(".", operandB);
             display.textContent = operandB.value;
             operandB.isInteger = false;
@@ -75,15 +75,15 @@ function getResultOf(input) {
 
 
     if (input == "backspace" ) {
-        if (isEmpty(operator) && hasValue(operandA.value)) {
+        if (isEmpty(operator) && isPopulated(operandA.value)) {
             operandA.value = removeLastCharFrom(operandA.value);
             display.textContent = operandA.value;
         } 
-        else if (hasValue(operator) && isEmpty(operandB.value)) {
+        else if (isPopulated(operator) && isEmpty(operandB.value)) {
             operator = "";
             setTileColors();
         }
-        else if (hasValue(operandB.value) && operationCompleted == false) {
+        else if (isPopulated(operandB.value) && operationCompleted == false) {
               operandB.value = removeLastCharFrom(operandB.value);
               display.textContent = operandB.value;  
         }
@@ -106,7 +106,7 @@ function setTileColors(str = "") {
     for (const tile in tiles) {
         tiles[tile].style.backgroundColor = "white";
     }
-    if (hasValue(str)) {
+    if (isPopulated(str)) {
         tiles[str].style.backgroundColor = "DarkSeaGreen";
     }
 };
@@ -187,7 +187,7 @@ function isNumber(str) {
     return (Number(str) >= 0);
 };
 
-function hasValue(str) {
+function isPopulated(str) {
     return (str != "");
 };
 
