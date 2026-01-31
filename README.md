@@ -11,5 +11,5 @@ You can learn about the assignment [here](https://www.theodinproject.com/lessons
 - Find [El Dorado](https://en.wikipedia.org/wiki/El_Dorado)
 
 ### Known bugs
-- Pressing any operator after triggering easter egg prints 'NaN' to display
+- Pressing any operator after triggering easter egg writes 'NaN' into memory
 - ✅ ~~Inputs of 13 characters start to overflow display~~

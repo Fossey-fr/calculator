@@ -1,102 +1,117 @@
-let first = {
-    num: "",
-    hasDecimal: false,
-};
-let second = {
-    num: "",
-    hasDecimal: false,
-};
+let first = { num: "", isInteger: true, };
+let second = { num: "", isInteger: true, };
 let operator = "";
 let operationCompleted = false;
 let maxDisplayChars = 10;
 
+const display = document.querySelector("#display");
 const tiles = {
     add: document.querySelector("#add"),
     subtract: document.querySelector("#subtract"),
     multiply: document.querySelector("#multiply"),
     divide: document.querySelector("#divide"),
 }
-
-const display = document.querySelector("#displaySpan");
 const btns = document.querySelectorAll(".btn");
 btns.forEach((button) => {
     button.addEventListener("click", () => {
-        evaluateInput(button.id);
+        getResultOf(button.id);
     });
 });
 
 
-function evaluateInput(input) {
-    if (input == "ac" || (operationCompleted && isNumberChar(input))) {
+function getResultOf(input) {
+    if (input == "ac") {
         resetValues();
-        if (input == "ac") return;
-    };
+    }
 
-    // check second.num for value early so using operators as pseudo-equals button 
-    // doesn't result in endless loop
-    if (hasValue(second.num)) {
-        let result = operate(Number(first.num), operator, Number(second.num));
-        
-        if (input == "equals") {          
+    if (input == "equals") {
+        if (hasValue(second.num)) {
+            let result = operate(Number(first.num), operator, Number(second.num));
             display.textContent = result;
-            setTilesTo("white");
+            setTileColors();
             operationCompleted = true;
-        };
+        }
+    }
 
-        // preserves results so you can do additional operations on the data
-        if (isOperator(input)) {
+    if (isNumber(input)) {
+        if (operationCompleted) {
+            resetValues();
+        }
+        
+        if (isEmpty(operator)) {
+            if (isValidLength(first.num)) {
+                first.num += input;
+                display.textContent = first.num;
+            }
+        }
+        else {
+            if (isValidLength(second.num)) {
+                second.num += input;
+                display.textContent = second.num;
+                setTileColors();
+            }
+        }
+    }
+
+    if (isOperator(input)) {
+        if (hasValue(second.num)) {
+            let result = operate(Number(first.num), operator, Number(second.num));
             resetValues();
             display.textContent = result;
             first.num = result;
             operator = input;
-        };
-    };
-
-    if (isEmpty(operator) && isNumberChar(input)) {
-        if (input == "." && first.hasDecimal) {
-            return;
-        } else if (input == ".") {
-            first.hasDecimal = true;
         }
-        if (first.num.length < maxDisplayChars) first.num += input;
-        display.textContent = first.num;
-        return;
-    };
-
-    if (hasValue(first.num) && isOperator(input)) {
-        operator = input;
-        setTilesTo("white");
-        tiles[input].style.backgroundColor = "DarkSeaGreen";
-        return;
-    };
-
-    if (hasValue(operator) && isNumberChar(input)) {
-        if (input == "." && second.hasDecimal) {
-            return;
-        } else if (input == ".") {
-            second.hasDecimal = true;
+        else {
+            if (hasValue(first.num)) {
+                operator = input;
+                setTileColors(input)
+            }
         }
-        if (second.num.length < maxDisplayChars) second.num += input;
-        display.textContent = second.num;
-    };
-;}
+    }
+
+    if (input == "decimal") {
+        if (isEmpty(operator) && first.isInteger) {
+           if (isValidLength(first.num)) {
+            first.num += ".";
+            display.textContent = first.num;
+            first.isInteger = false;
+           }
+        }
+        else {
+            if (hasValue(operator) && second.isInteger) {
+                if (isValidLength(second.num)) {
+                    second.num += ".";
+                    display.textContent = second.num;
+                    second.isInteger = false;
+                }
+            }
+        }
+    }
+};
 
 
 function resetValues() {
     first.num = "";
     second.num = "";
-    first.hasDecimal = false;
-    second.hasDecimal = false;
+    first.isInteger = true;
+    second.isInteger = true;
     operator = "";
     operationCompleted = false;
     display.textContent = "";
-    setTilesTo("white");
-}
+    setTileColors();
+};
 
-function setTilesTo(str) {
+function setTileColors(str = "") {
     for (const tile in tiles) {
-            tiles[tile].style.backgroundColor = str;
-        }
+        tiles[tile].style.backgroundColor = "white";
+    }
+    if (hasValue(str)) {
+        tiles[str].style.backgroundColor = "DarkSeaGreen";
+    }
+};
+
+function isValidLength(str) {
+    return (str.length < maxDisplayChars) 
 };
 
 
@@ -116,11 +131,11 @@ function operate(firstNum, operator, secondNum) {
                 return "Congrats, now you get nothing.";
              } else { 
                 return divide(firstNum, secondNum);
-             };
+             }
             break;
         default:
             console.log("An unexpected string was used as an operator in operate()");
-    };
+    }
 };
 
 function add(a, b) {
@@ -143,21 +158,21 @@ function divide(a, b) {
     return trim(result);
 };
 
-function trim(number, length = maxDisplayChars) {
+function trim(number) {
     let arr = Array.from(String(number));
-    // check first digit after cutoff, and trim accordingly
-    if (arr[length] >= 5) arr[(length - 1)]++; 
-    arr.splice(length);
+    // check first digit after cutoff to determine how to round number 
+    if (arr[maxDisplayChars] >= 5) arr[(maxDisplayChars - 1)]++; 
+    arr.splice(maxDisplayChars);
     return Number(arr.join(""));
-}
+};
 
 
 function isEmpty(str) {
     return (str == "");
 };
 
-function isNumberChar(str) {
-    return (Number(str) >= 0 || str == ".");
+function isNumber(str) {
+    return (Number(str) >= 0);
 };
 
 function hasValue(str) {
