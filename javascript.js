@@ -165,7 +165,7 @@ function operate(str, operator, otherStr) {
             return multiply(firstNum, secondNum);
         case "divide":
             if (divide(firstNum, secondNum) == 0) {
-                return "Congrats, now you get nothing.";
+                return "Calculator no tell Meghan";
              } else { 
                 return divide(firstNum, secondNum);
              }
